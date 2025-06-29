@@ -50,19 +50,30 @@ tmux_version() {
 
 # Checks whether tmux version is >= 3.3
 is_tmux_version_supported() {
-    local version
-    IFS='.' read -r -a version < <(tmux_version)
+    local raw major minor
 
-    if [ "${version[0]}" -gt 3 ]; then
+    raw="$(tmux_version)"          # e.g. “3.4”, “3.3a”, “next-3.6”, “master-3.5-32-gdeadbeef”
+
+    # Strip any prefix ending with a dash (“next-”, “master-”…)
+    raw="${raw##*-}"               # “next-3.6” → “3.6”
+
+    # Grab the first two dot-separated fields (major.minor)
+    # Anything after the minor part (e.g. “a” in “3.3a”) is OK.
+    IFS='.' read -r major minor _ <<<"$raw"
+
+    # Make sure minor is numeric even if it has a suffix like “3a”
+    minor="${minor//[!0-9]}"
+
+    # Default to zero if we failed to grab numbers
+    : "${major:=0}" "${minor:=0}"
+
+    if   (( major > 3 )); then
         return 0
-    fi
-
-    # Minor version can be a number or alphanumeric, e.g. 3.3 vs 3.3a
-    if [ "${version[0]}" -eq 3 ] && [ "${version[1]//[!0-9]}" -ge 3 ]; then
+    elif (( major == 3 && minor >= 3 )); then
         return 0
+    else
+        return 1
     fi
-
-    return 1
 }
 
 tmux_popup() {
