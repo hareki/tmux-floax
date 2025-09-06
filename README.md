@@ -28,6 +28,10 @@ Standard menu options (followed by their hotkey):
 - Reset: Sets the pane's size back to the default settings
 - Embed: sends the floating panes window to the working space under it
 
+## Neovim Integration 🚀
+
+When nvim is running in the current pane, pressing the floax key will pass the key directly to nvim instead of opening the floating pane. This allows you to use the same keybinding for both tmux floax and nvim functionality like [toggleterm.nvim](https://github.com/akinsho/toggleterm.nvim). This feature is disabled by default.
+
 ## Configure ⚙️
 
 The default binding for this plugin is `<prefix>+p` (and `<prefix>+P` for the internal menu)
@@ -84,6 +88,11 @@ set -g @floax-session-name 'some-other-session-name'
 
 # Change the title of the floating window
 set -g @floax-title 'floax'
+
+# Enable/disable nvim integration
+# When enabled, pressing the floax key while nvim is running
+# will send the key to nvim instead of opening the floating pane
+set -g @floax-nvim-passthrough 'false'
 ```
 
 ## Known issues 🐞
