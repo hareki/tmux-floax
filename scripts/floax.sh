@@ -40,10 +40,10 @@ else
         # Send the actual key to nvim
         tmux send-keys "$actual_key"
     else
+        set_bindings
         # When nvim passthrough is disabled or nvim is not running, proceed with normal floax behavior
         # Check if the session 'scratch' exists
         if tmux has-session -t "$FLOAX_SESSION_NAME" 2>/dev/null; then
-            set_bindings
             tmux_popup
         else
             # Create a new session named 'scratch' and attach to it
