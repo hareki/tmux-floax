@@ -11,6 +11,10 @@ is_nvim_running() {
 }
 
 tmux setenv -g ORIGIN_SESSION "$(tmux display -p '#{session_name}')"
+if [ -z "$FLOAX_SESSION_NAME" ]; then
+    FLOAX_SESSION_NAME="$DEFAULT_SESSION_NAME"
+fi
+
 if [ "$(tmux display-message -p '#{session_name}')" = "$FLOAX_SESSION_NAME" ]; then
     unset_bindings
 
@@ -18,11 +22,6 @@ if [ "$(tmux display-message -p '#{session_name}')" = "$FLOAX_SESSION_NAME" ]; t
         FLOAX_TITLE="$DEFAULT_TITLE"
     fi
 
-    if [ -z "$FLOAX_SESSION_NAME" ]; then
-        FLOAX_SESSION_NAME="$DEFAULT_SESSION_NAME"
-    fi
-
-    change_popup_title "$FLOAX_TITLE"
     tmux setenv -g FLOAX_TITLE "$FLOAX_TITLE"
     tmux detach-client
 else
